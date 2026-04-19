@@ -1,0 +1,104 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}Edit {{ habit.name }} — HabitFlow{% endblock %}
+{% block body_class %}page-dashboard{% endblock %}
+
+{% block background %}
+<div class="animated-bg">
+    <div class="bg-gradient-layer"></div>
+    <div class="particle" style="--x: 25%; --y: 35%; --duration: 7s; --delay: 0s; --size: 4px;"></div>
+    <div class="particle" style="--x: 55%; --y: 65%; --duration: 8s; --delay: 1s; --size: 5px;"></div>
+    <div class="particle" style="--x: 75%; --y: 20%; --duration: 6.5s; --delay: 0.5s; --size: 3px;"></div>
+    <div class="particle" style="--x: 40%; --y: 75%; --duration: 9s; --delay: 2s; --size: 6px;"></div>
+    <div class="orb orb-1"></div>
+    <div class="orb orb-3"></div>
+    <div class="mesh-line mesh-2"></div>
+    <div class="mesh-line mesh-4"></div>
+</div>
+{% endblock %}
+
+{% block content %}
+<div class="dash-wrapper">
+    <nav class="dash-topbar">
+        <div class="container-fluid px-4 d-flex justify-content-between align-items-center">
+            <a class="dash-logo" href="{% url 'dashboard' %}">⚡ HabitFlow</a>
+            <a href="{% url 'dashboard' %}" class="btn btn-ghost btn-sm btn-glow"><i class="bi bi-arrow-left me-1"></i>Back</a>
+        </div>
+    </nav>
+    <div class="container py-5">
+        <div class="row justify-content-center">
+            <div class="col-md-7 col-lg-5">
+                <div class="habit-form-card">
+                    <div class="habit-form-header">
+                        <div class="habit-form-icon">✏️</div>
+                        <h3>Edit Habit</h3>
+                        <p>Update "{{ habit.name }}"</p>
+                    </div>
+                    <form method="post" class="habit-form-body">
+                        {% csrf_token %}
+                        <div class="form-group">
+                            <label class="form-label-hf">Habit Name</label>
+                            {{ form.name }}
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label-hf">Description</label>
+                            {{ form.description }}
+                        </div>
+                        <div class="row g-3">
+                            <div class="col-6">
+                                <div class="form-group">
+                                    <label class="form-label-hf">Category</label>
+                                    <div class="custom-select-wrap">{{ form.category }}</div>
+                                </div>
+                            </div>
+                            <div class="col-6">
+                                <div class="form-group">
+                                    <label class="form-label-hf">Frequency</label>
+                                    <div class="custom-select-wrap">{{ form.frequency }}</div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row g-3">
+                            <div class="col-6">
+                                <div class="form-group">
+                                    <label class="form-label-hf">Color</label>
+                                    <div class="color-picker-wrap">
+                                        {{ form.color }}
+                                        <div class="color-preview" id="colorPreview"></div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-6">
+                                <div class="form-group">
+                                    <label class="form-label-hf">Daily Target</label>
+                                    {{ form.target_count }}
+                                </div>
+                            </div>
+                        </div>
+                        <div class="habit-form-actions">
+                            <a href="{% url 'dashboard' %}" class="btn btn-ghost btn-lg btn-glow flex-fill">Cancel</a>
+                            <button type="submit" class="btn btn-accent btn-lg btn-glow flex-fill">
+                                <i class="bi bi-check-lg me-2"></i>Save Changes
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const colorSelect = document.querySelector('select[name="color"]');
+    const preview = document.getElementById('colorPreview');
+    if (colorSelect && preview) {
+        function updatePreview() { preview.style.backgroundColor = colorSelect.value; }
+        colorSelect.addEventListener('change', updatePreview);
+        updatePreview();
+    }
+});
+</script>
+{% endblock %}

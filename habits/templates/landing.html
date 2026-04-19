@@ -1,0 +1,93 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}HabitFlow — Build Better Habits{% endblock %}
+{% block body_class %}page-landing{% endblock %}
+
+{% block background %}
+<div class="animated-bg">
+    <div class="bg-gradient-layer"></div>
+    <div class="particle" style="--x: 10%; --y: 20%; --duration: 6s; --delay: 0s; --size: 4px;"></div>
+    <div class="particle" style="--x: 25%; --y: 60%; --duration: 8s; --delay: 1s; --size: 6px;"></div>
+    <div class="particle" style="--x: 40%; --y: 35%; --duration: 7s; --delay: 0.5s; --size: 3px;"></div>
+    <div class="particle" style="--x: 55%; --y: 75%; --duration: 9s; --delay: 2s; --size: 5px;"></div>
+    <div class="particle" style="--x: 70%; --y: 15%; --duration: 6.5s; --delay: 1.5s; --size: 4px;"></div>
+    <div class="particle" style="--x: 85%; --y: 45%; --duration: 7.5s; --delay: 0.8s; --size: 7px;"></div>
+    <div class="particle" style="--x: 15%; --y: 80%; --duration: 8.5s; --delay: 3s; --size: 3px;"></div>
+    <div class="particle" style="--x: 60%; --y: 50%; --duration: 10s; --delay: 0.3s; --size: 5px;"></div>
+    <div class="particle" style="--x: 90%; --y: 70%; --duration: 6s; --delay: 2.5s; --size: 4px;"></div>
+    <div class="particle" style="--x: 35%; --y: 10%; --duration: 7s; --delay: 1.2s; --size: 6px;"></div>
+    <div class="particle" style="--x: 50%; --y: 90%; --duration: 9s; --delay: 0.7s; --size: 3px;"></div>
+    <div class="particle" style="--x: 75%; --y: 30%; --duration: 8s; --delay: 1.8s; --size: 5px;"></div>
+    <div class="orb orb-1"></div>
+    <div class="orb orb-2"></div>
+    <div class="orb orb-3"></div>
+    <div class="mesh-line mesh-1"></div>
+    <div class="mesh-line mesh-2"></div>
+    <div class="mesh-line mesh-3"></div>
+    <div class="mesh-line mesh-4"></div>
+</div>
+{% endblock %}
+
+{% block content %}
+<div class="landing-wrapper">
+    <nav class="landing-topbar">
+        <div class="container d-flex justify-content-between align-items-center">
+            <a class="landing-logo" href="{% url 'landing' %}">
+                <span class="logo-bolt">⚡</span> HabitFlow
+            </a>
+            <div class="d-flex gap-2">
+                <a href="{% url 'login' %}" class="btn btn-ghost btn-glow">Sign In</a>
+                <a href="{% url 'register' %}" class="btn btn-accent btn-glow">Get Started</a>
+            </div>
+        </div>
+    </nav>
+
+    <section class="landing-hero">
+        <div class="container text-center">
+            <div class="hero-pill">New — Track habits with ease</div>
+            <h1 class="hero-heading">
+                Build habits that<br><span class="hero-gradient-text">actually stick</span>
+            </h1>
+            <p class="hero-sub">
+                Simple daily tracking. Mark complete or skip. See your streaks grow.<br>
+                No clutter, no confusion — just progress.
+            </p>
+            <div class="hero-buttons">
+                <a href="{% url 'register' %}" class="btn btn-accent btn-xl btn-glow">
+                    <i class="bi bi-arrow-right-circle me-2"></i>Start Free
+                </a>
+                <a href="{% url 'login' %}" class="btn btn-ghost btn-xl btn-glow">Sign In</a>
+            </div>
+        </div>
+    </section>
+
+    <section class="landing-features">
+        <div class="container">
+            <div class="row g-4 justify-content-center">
+                <div class="col-md-4">
+                    <div class="feature-tile">
+                        <div class="feature-tile-icon">✅</div>
+                        <h4>One-Tap Tracking</h4>
+                        <p>Complete or skip each habit with a single click. Re-edit anytime you want.</p>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="feature-tile">
+                        <div class="feature-tile-icon">🔥</div>
+                        <h4>Streaks</h4>
+                        <p>Watch your consistency build day after day with visual streak counters.</p>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="feature-tile">
+                        <div class="feature-tile-icon">📊</div>
+                        <h4>Daily Progress</h4>
+                        <p>See exactly where you stand today at a glance with clear progress bars.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+</div>
+{% endblock %}

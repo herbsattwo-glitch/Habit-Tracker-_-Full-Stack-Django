@@ -1,0 +1,66 @@
+{% extends 'base.html' %}
+{% block title %}Delete {{ habit.name }} — HabitFlow{% endblock %}
+{% block body_class %}page-dashboard{% endblock %}
+
+{% block background %}
+<div class="animated-bg">
+    <div class="bg-gradient-layer"></div>
+    <div class="particle" style="--x: 30%; --y: 40%; --duration: 7s; --delay: 0s; --size: 4px;"></div>
+    <div class="particle" style="--x: 60%; --y: 20%; --duration: 8s; --delay: 1s; --size: 5px;"></div>
+    <div class="particle" style="--x: 80%; --y: 60%; --duration: 6.5s; --delay: 0.5s; --size: 3px;"></div>
+    <div class="particle" style="--x: 15%; --y: 70%; --duration: 9s; --delay: 2s; --size: 6px;"></div>
+    <div class="orb orb-2"></div>
+    <div class="orb orb-3"></div>
+    <div class="mesh-line mesh-1"></div>
+    <div class="mesh-line mesh-4"></div>
+</div>
+{% endblock %}
+
+{% block content %}
+<div class="dash-wrapper">
+    <nav class="dash-topbar">
+        <div class="container-fluid px-4 d-flex justify-content-between align-items-center">
+            <a class="dash-logo" href="{% url 'dashboard' %}">⚡ HabitFlow</a>
+            <a href="{% url 'dashboard' %}" class="btn btn-ghost btn-sm btn-glow"><i class="bi bi-arrow-left me-1"></i>Back</a>
+        </div>
+    </nav>
+    <div class="container py-5">
+        <div class="row justify-content-center">
+            <div class="col-md-6 col-lg-4">
+                <div class="delete-card">
+                    <div class="delete-card-inner">
+                        <div class="delete-icon-wrap">
+                            <div class="delete-icon-circle">
+                                <i class="bi bi-trash3"></i>
+                            </div>
+                        </div>
+                        <h3 class="delete-title">Delete Habit</h3>
+                        <p class="delete-message">
+                            Are you sure you want to delete
+                        </p>
+                        <div class="delete-habit-name">
+                            <span class="delete-habit-color" style="background: {{ habit.color }}"></span>
+                            {{ habit.name }}
+                        </div>
+                        <p class="delete-warning">
+                            <i class="bi bi-exclamation-triangle me-1"></i>
+                            This action cannot be undone. All tracking data for this habit will be permanently removed.
+                        </p>
+                        <form method="post" class="delete-form">
+                            {% csrf_token %}
+                            <div class="delete-actions">
+                                <a href="{% url 'dashboard' %}" class="btn btn-ghost btn-lg btn-glow delete-btn-cancel">
+                                    <i class="bi bi-x-lg me-2"></i>Cancel
+                                </a>
+                                <button type="submit" class="btn btn-delete btn-lg btn-glow delete-btn-confirm">
+                                    <i class="bi bi-trash3 me-2"></i>Delete Forever
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

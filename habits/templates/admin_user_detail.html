@@ -1,0 +1,97 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load habit_extras %}
+
+{% block title %}{{ target_user.username }} — Admin{% endblock %}
+{% block body_class %}page-admin{% endblock %}
+
+{% block background %}
+<div class="animated-bg animated-bg-admin">
+    <div class="bg-gradient-layer bg-gradient-admin"></div>
+    <div class="particle" style="--x: 15%; --y: 25%; --duration: 7s; --delay: 0s; --size: 4px;"></div>
+    <div class="particle" style="--x: 40%; --y: 55%; --duration: 8s; --delay: 1s; --size: 5px;"></div>
+    <div class="particle" style="--x: 65%; --y: 20%; --duration: 6.5s; --delay: 0.5s; --size: 3px;"></div>
+    <div class="particle" style="--x: 85%; --y: 70%; --duration: 9s; --delay: 2s; --size: 6px;"></div>
+    <div class="particle" style="--x: 30%; --y: 80%; --duration: 7.5s; --delay: 1.5s; --size: 4px;"></div>
+    <div class="orb orb-admin-1"></div>
+    <div class="orb orb-admin-2"></div>
+    <div class="mesh-line mesh-1"></div>
+    <div class="mesh-line mesh-3"></div>
+    <div class="scan-line"></div>
+</div>
+{% endblock %}
+
+{% block content %}
+<div class="admin-wrapper">
+    <nav class="admin-topbar">
+        <div class="container-fluid px-4 d-flex justify-content-between align-items-center">
+            <a class="admin-logo" href="{% url 'admin_dashboard' %}"><i class="bi bi-arrow-left me-2"></i>Back</a>
+            <a href="{% url 'logout' %}" class="btn btn-ghost btn-sm btn-glow"><i class="bi bi-box-arrow-right me-1"></i>Sign Out</a>
+        </div>
+    </nav>
+    <div class="container-fluid px-4 py-4">
+        <div class="admin-detail-header mb-4">
+            <div class="admin-detail-avatar" style="background: {{ profile.avatar_color }}">
+                {{ target_user.first_name|first|default:target_user.username|first }}
+            </div>
+            <div class="admin-detail-info">
+                <h2 class="fw-700 mb-1">{{ target_user.first_name }} {{ target_user.last_name }}</h2>
+                <p class="text-muted mb-1">@{{ target_user.username }} · {{ target_user.email }}</p>
+                <div class="d-flex gap-2 align-items-center">
+                    <span class="text-sm text-muted">Joined {{ target_user.date_joined|date:"M d, Y" }}</span>
+                    {% if profile.is_deactivated %}
+                    <span class="admin-badge admin-badge-danger">Deactivated</span>
+                    {% else %}
+                    <span class="admin-badge admin-badge-success">Active</span>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+
+        <h4 class="fw-700 mb-3"><i class="bi bi-collection me-2"></i>Habits ({{ habit_data|length }})</h4>
+        {% if habit_data %}
+        <div class="row g-3 mb-4">
+            {% for item in habit_data %}
+            <div class="col-md-6 col-xl-4">
+                <div class="admin-habit-tile" style="border-left: 4px solid {{ item.habit.color }}">
+                    <h6 class="fw-600 mb-1">{{ item.habit.name }}</h6>
+                    <span class="text-sm text-muted">{{ item.habit.get_category_display }} · {{ item.habit.get_frequency_display }}</span>
+                    <div class="admin-habit-bar mt-2">
+                        <div class="admin-habit-bar-fill" style="width: {{ item.progress }}%; background: {{ item.habit.color }}"></div>
+                    </div>
+                    <div class="d-flex justify-content-between mt-2">
+                        <span class="text-sm text-muted">{{ item.progress }}% today</span>
+                        <span class="text-sm text-muted">🔥 {{ item.streak }} streak · {{ item.total_completions }} total</span>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+        {% else %}
+        <p class="text-muted mb-4">This user hasn't created any habits yet.</p>
+        {% endif %}
+
+        <h4 class="fw-700 mb-3"><i class="bi bi-clock-history me-2"></i>Recent Activity</h4>
+        <div class="admin-activity-list">
+            {% for log in recent_logs %}
+            <div class="admin-activity-row">
+                <div class="admin-activity-icon {% if log.is_completed %}icon-done{% elif log.is_skipped %}icon-skip{% else %}icon-miss{% endif %}">
+                    {% if log.is_completed %}<i class="bi bi-check-lg"></i>
+                    {% elif log.is_skipped %}<i class="bi bi-dash-lg"></i>
+                    {% else %}<i class="bi bi-x-lg"></i>{% endif %}
+                </div>
+                <div class="flex-grow-1">
+                    <span class="fw-600">{{ log.habit.name }}</span>
+                    <span class="text-sm text-muted ms-2">
+                        {% if log.is_completed %}Completed{% elif log.is_skipped %}Skipped{% else %}Missed{% endif %}
+                    </span>
+                </div>
+                <span class="text-sm text-muted">{{ log.completed_at|date:"M d, Y · H:i" }}</span>
+            </div>
+            {% empty %}
+            <div class="text-center py-4 text-muted">No activity recorded yet.</div>
+            {% endfor %}
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,223 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load habit_extras %}
+
+{% block title %}Dashboard — HabitFlow{% endblock %}
+{% block body_class %}page-dashboard{% endblock %}
+
+{% block background %}
+<div class="animated-bg">
+    <div class="bg-gradient-layer"></div>
+    <div class="particle" style="--x: 8%; --y: 15%; --duration: 7s; --delay: 0s; --size: 4px;"></div>
+    <div class="particle" style="--x: 22%; --y: 55%; --duration: 9s; --delay: 1s; --size: 5px;"></div>
+    <div class="particle" style="--x: 38%; --y: 30%; --duration: 6s; --delay: 0.5s; --size: 3px;"></div>
+    <div class="particle" style="--x: 52%; --y: 70%; --duration: 8s; --delay: 2s; --size: 6px;"></div>
+    <div class="particle" style="--x: 68%; --y: 20%; --duration: 7.5s; --delay: 1.5s; --size: 4px;"></div>
+    <div class="particle" style="--x: 82%; --y: 50%; --duration: 8.5s; --delay: 0.8s; --size: 5px;"></div>
+    <div class="particle" style="--x: 15%; --y: 85%; --duration: 10s; --delay: 3s; --size: 3px;"></div>
+    <div class="particle" style="--x: 45%; --y: 42%; --duration: 6.5s; --delay: 0.3s; --size: 4px;"></div>
+    <div class="particle" style="--x: 92%; --y: 65%; --duration: 7s; --delay: 2.5s; --size: 5px;"></div>
+    <div class="particle" style="--x: 60%; --y: 88%; --duration: 9s; --delay: 1.2s; --size: 3px;"></div>
+    <div class="orb orb-1"></div>
+    <div class="orb orb-2"></div>
+    <div class="orb orb-3"></div>
+    <div class="mesh-line mesh-1"></div>
+    <div class="mesh-line mesh-2"></div>
+    <div class="mesh-line mesh-3"></div>
+    <div class="mesh-line mesh-4"></div>
+</div>
+{% endblock %}
+
+{% block content %}
+<div class="dash-wrapper">
+    <nav class="dash-topbar">
+        <div class="container-fluid px-4 d-flex justify-content-between align-items-center">
+            <a class="dash-logo" href="{% url 'dashboard' %}">⚡ HabitFlow</a>
+            <div class="d-flex align-items-center gap-3">
+                {% if is_admin_user %}
+                <a href="{% url 'admin_dashboard' %}" class="btn btn-outline-admin btn-sm btn-glow">
+                    <i class="bi bi-shield-lock me-1"></i>Admin
+                </a>
+                {% endif %}
+                <div class="dash-user-menu">
+                    <button class="dash-user-btn btn-glow" id="userMenuBtn">
+                        <span class="dash-user-avatar">{{ user.first_name|first|default:user.username|first }}</span>
+                        <span class="d-none d-md-inline">{{ user.first_name|default:user.username }}</span>
+                        <i class="bi bi-chevron-down"></i>
+                    </button>
+                    <div class="dash-user-dropdown" id="userDropdown">
+                        <div class="dropdown-user-info">
+                            <div class="fw-600">{{ user.first_name }} {{ user.last_name }}</div>
+                            <div class="text-sm text-muted">{{ user.email }}</div>
+                        </div>
+                        <div class="dropdown-divider"></div>
+                        <a href="{% url 'logout' %}" class="dropdown-action">
+                            <i class="bi bi-box-arrow-right me-2"></i>Sign Out
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container-fluid px-4 py-4">
+        <div class="dash-welcome">
+            <div class="row align-items-center">
+                <div class="col">
+                    <h2 class="dash-welcome-title">
+                        Welcome back, <span class="text-accent">{{ user.first_name|default:user.username }}</span>
+                    </h2>
+                    <p class="dash-welcome-date">{{ today|date:"l, F j, Y" }}</p>
+                </div>
+                <div class="col-auto">
+                    <a href="{% url 'habit_create' %}" class="btn btn-accent btn-lg btn-glow">
+                        <i class="bi bi-plus-lg me-2"></i>New Habit
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <div class="row g-3 mb-4">
+            <div class="col-6 col-lg-3">
+                <div class="dash-stat-card">
+                    <div class="dash-stat-num">{{ total_habits }}</div>
+                    <div class="dash-stat-label">Total Habits</div>
+                </div>
+            </div>
+            <div class="col-6 col-lg-3">
+                <div class="dash-stat-card dash-stat-success">
+                    <div class="dash-stat-num">{{ completed_today }}</div>
+                    <div class="dash-stat-label">Completed</div>
+                </div>
+            </div>
+            <div class="col-6 col-lg-3">
+                <div class="dash-stat-card dash-stat-warn">
+                    <div class="dash-stat-num">{{ overall_progress }}%</div>
+                    <div class="dash-stat-label">Progress</div>
+                    <div class="dash-stat-bar">
+                        <div class="dash-stat-bar-fill" style="width: {{ overall_progress }}%"></div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-6 col-lg-3">
+                <div class="dash-stat-card dash-stat-fire">
+                    <div class="dash-stat-num">{{ best_streak }}</div>
+                    <div class="dash-stat-label">Best Streak</div>
+                </div>
+            </div>
+        </div>
+
+        {% if habits %}
+        <div class="row g-4">
+            {% for item in habits %}
+            <div class="col-md-6 col-xl-4" id="habit-card-{{ item.habit.pk }}">
+                <div class="habit-tile {% if item.status == 'completed' %}habit-tile-done{% elif item.status == 'skipped' %}habit-tile-skipped{% endif %}" style="--hcolor: {{ item.habit.color }}">
+                    <div class="habit-tile-top">
+                        <div>
+                            <span class="habit-cat">{{ item.habit.get_category_display }}</span>
+                            <h5 class="habit-title">{{ item.habit.name }}</h5>
+                            {% if item.habit.description %}
+                            <p class="habit-desc">{{ item.habit.description|truncatewords:15 }}</p>
+                            {% endif %}
+                        </div>
+                        <div class="dropdown">
+                            <button class="habit-menu-btn" data-bs-toggle="dropdown">
+                                <i class="bi bi-three-dots"></i>
+                            </button>
+                            <ul class="dropdown-menu dropdown-menu-end hf-dropdown">
+                                <li><a class="dropdown-item" href="{% url 'habit_edit' item.habit.pk %}"><i class="bi bi-pencil me-2"></i>Edit</a></li>
+                                <li><a class="dropdown-item text-danger" href="{% url 'habit_delete' item.habit.pk %}"><i class="bi bi-trash me-2"></i>Delete</a></li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="habit-week">
+                        {% for day in item.weekly %}
+                        <div class="habit-day {% if day.status == 'completed' %}day-done{% elif day.status == 'skipped' %}day-skip{% endif %}" title="{{ day.date|date:'M d' }}">
+                            <span class="day-letter">{{ day.day_name }}</span>
+                            <span class="day-dot-indicator"></span>
+                        </div>
+                        {% endfor %}
+                    </div>
+
+                    <div class="habit-today-progress">
+                        <div class="d-flex justify-content-between mb-1">
+                            <span class="text-sm fw-600">Today</span>
+                            <span class="habit-streak-badge">🔥 {{ item.streak }} day{{ item.streak|pluralize }}</span>
+                        </div>
+                        <div class="habit-progress-track">
+                            <div class="habit-progress-fill {% if item.status == 'completed' %}fill-done{% elif item.status == 'skipped' %}fill-skip{% endif %}"
+                                 style="width: {{ item.progress }}%"></div>
+                        </div>
+                        <div class="text-sm text-muted mt-1">
+                            {% if item.status == 'completed' %}Completed ✓
+                            {% elif item.status == 'skipped' %}Skipped —
+                            {% else %}Pending{% endif %}
+                        </div>
+                    </div>
+
+                    <div class="habit-actions">
+                        {% if item.status == 'pending' %}
+                            <form method="post" action="{% url 'habit_mark' item.habit.pk 'complete' %}" class="d-inline flex-fill">
+                                {% csrf_token %}
+                                <button type="submit" class="btn btn-habit-complete btn-glow w-100">
+                                    <i class="bi bi-check-circle me-1"></i> Complete
+                                </button>
+                            </form>
+                            <form method="post" action="{% url 'habit_mark' item.habit.pk 'skip' %}" class="d-inline flex-fill">
+                                {% csrf_token %}
+                                <button type="submit" class="btn btn-habit-skip btn-glow w-100">
+                                    <i class="bi bi-dash-circle me-1"></i> Skip
+                                </button>
+                            </form>
+                        {% else %}
+                            <div class="habit-status-display flex-fill">
+                                {% if item.status == 'completed' %}
+                                    <span class="status-badge status-done"><i class="bi bi-check-circle-fill me-1"></i> Completed</span>
+                                {% else %}
+                                    <span class="status-badge status-skipped"><i class="bi bi-dash-circle-fill me-1"></i> Skipped</span>
+                                {% endif %}
+                            </div>
+                            <form method="post" action="{% url 'habit_mark' item.habit.pk 'undo' %}" class="d-inline">
+                                {% csrf_token %}
+                                <button type="submit" class="btn btn-habit-undo btn-glow" title="Change status">
+                                    <i class="bi bi-arrow-counterclockwise"></i>
+                                </button>
+                            </form>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+        {% else %}
+        <div class="dash-empty">
+            <div class="dash-empty-icon">🌱</div>
+            <h4>No habits yet</h4>
+            <p>Start by adding your first habit to track.</p>
+            <a href="{% url 'habit_create' %}" class="btn btn-accent btn-lg btn-glow">
+                <i class="bi bi-plus-lg me-2"></i>Add Your First Habit
+            </a>
+        </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const menuBtn = document.getElementById('userMenuBtn');
+    const dropdown = document.getElementById('userDropdown');
+    if (menuBtn && dropdown) {
+        menuBtn.addEventListener('click', function(e) {
+            e.stopPropagation();
+            dropdown.classList.toggle('show');
+        });
+        document.addEventListener('click', function() {
+            dropdown.classList.remove('show');
+        });
+    }
+});
+</script>
+{% endblock %}
