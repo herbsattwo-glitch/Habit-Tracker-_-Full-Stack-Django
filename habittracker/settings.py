@@ -1,6 +1,6 @@
 import os
 from pathlib import Path
-from decouple import config, Csv
+from decouple import config
 import dj_database_url
 
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -12,11 +12,11 @@ SECRET_KEY = config('DJANGO_SECRET_KEY', default='django-insecure-dev-key-change
 DEBUG = config('DEBUG', default=False, cast=bool)
 
 # Hosts allowed (Railway domain + localhost for dev)
-ALLOWED_HOSTS = config(
-    'ALLOWED_HOSTS',
-    default='localhost,127.0.0.1,habit-tracker-full-stack-django-production.up.railway.app',
-    cast=Csv()
-)
+ALLOWED_HOSTS = [
+    "localhost",
+    "127.0.0.1",
+    "habit-tracker-full-stack-django-production.up.railway.app",
+]
 
 INSTALLED_APPS = [
     'django.contrib.admin',
