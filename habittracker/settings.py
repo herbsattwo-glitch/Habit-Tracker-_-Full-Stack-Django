@@ -15,7 +15,7 @@ DEBUG = config('DEBUG', default=False, cast=bool)
 ALLOWED_HOSTS = [
     "localhost",
     "127.0.0.1",
-    "habit-tracker-full-stack-django-production.up.railway.app",
+    "web-production-21f70.up.railway.app"
 ]
 
 INSTALLED_APPS = [
