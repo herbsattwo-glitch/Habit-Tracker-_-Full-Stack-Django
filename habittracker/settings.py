@@ -5,11 +5,18 @@ import dj_database_url
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-SECRET_KEY = config('SECRET_KEY', default='django-insecure-dev-key-change-in-production-!@#$%^&*()')
+# Secret key from environment
+SECRET_KEY = config('DJANGO_SECRET_KEY', default='django-insecure-dev-key-change-in-production-!@#$%^&*()')
 
-DEBUG = config('DEBUG', default=True, cast=bool)
+# Debug mode off in production
+DEBUG = config('DEBUG', default=False, cast=bool)
 
-ALLOWED_HOSTS = config('ALLOWED_HOSTS', default='localhost,127.0.0.1', cast=Csv())
+# Hosts allowed (Railway domain + localhost for dev)
+ALLOWED_HOSTS = config(
+    'ALLOWED_HOSTS',
+    default='localhost,127.0.0.1,habit-tracker-full-stack-django-production.up.railway.app',
+    cast=Csv()
+)
 
 INSTALLED_APPS = [
     'django.contrib.admin',
