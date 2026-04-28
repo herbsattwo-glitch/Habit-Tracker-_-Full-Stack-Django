@@ -5,20 +5,23 @@ import dj_database_url
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-# Secret key from environment
-SECRET_KEY = config('DJANGO_SECRET_KEY', default='django-insecure-dev-key-change-in-production-!@#$%^&*()')
+# ✅ Secret key from environment
+SECRET_KEY = config(
+    'DJANGO_SECRET_KEY',
+    default='django-insecure-dev-key-change-in-production-!@#$%^&*()'
+)
 
-# Debug mode off in production
+# ✅ Debug mode off in production
 DEBUG = config('DEBUG', default=False, cast=bool)
 
-# Hosts allowed (Railway domain + localhost for dev)
+# ✅ Hosts allowed (Railway domain + localhost for dev)
 ALLOWED_HOSTS = [
     "localhost",
     "127.0.0.1",
     "web-production-21f70.up.railway.app"
 ]
 
-# CSRF trusted origins (must match your Railway domain)
+# ✅ CSRF trusted origins (must match Railway domain)
 CSRF_TRUSTED_ORIGINS = [
     "https://web-production-21f70.up.railway.app"
 ]
@@ -96,6 +99,7 @@ LOGIN_URL = '/login/'
 LOGIN_REDIRECT_URL = '/dashboard/'
 LOGOUT_REDIRECT_URL = '/'
 
+# ✅ Email backend setup
 EMAIL_BACKEND = config('EMAIL_BACKEND', default='django.core.mail.backends.console.EmailBackend')
 EMAIL_HOST = config('EMAIL_HOST', default='smtp.gmail.com')
 EMAIL_PORT = config('EMAIL_PORT', default=587, cast=int)
@@ -106,6 +110,7 @@ DEFAULT_FROM_EMAIL = config('DEFAULT_FROM_EMAIL', default='noreply@habittracker.
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
+# ✅ Security settings for production
 if not DEBUG:
     SECURE_SSL_REDIRECT = True
     SESSION_COOKIE_SECURE = True
