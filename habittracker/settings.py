@@ -50,7 +50,8 @@ ROOT_URLCONF = 'habittracker.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        # ✅ Point to your custom templates folder
+        'DIRS': [BASE_DIR / "habits" / "templates"],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -85,7 +86,9 @@ TIME_ZONE = 'UTC'
 USE_I18N = True
 USE_TZ = True
 
+# ✅ Static files setup
 STATIC_URL = '/static/'
+STATICFILES_DIRS = [BASE_DIR / "habits" / "static"]
 STATIC_ROOT = BASE_DIR / 'staticfiles'
 STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
