@@ -66,9 +66,10 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'habittracker.wsgi.application'
 
+# ✅ Supabase Postgres database (persistent)
 DATABASES = {
     'default': dj_database_url.config(
-        default=config('DATABASE_URL', default=f'sqlite:///{BASE_DIR / "db.sqlite3"}')
+        default=os.environ.get('DATABASE_URL')
     )
 }
 
