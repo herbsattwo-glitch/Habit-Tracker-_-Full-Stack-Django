@@ -15,16 +15,10 @@ SECRET_KEY = config(
 DEBUG = config('DEBUG', default=False, cast=bool)
 
 # ✅ Hosts allowed (Railway domain + localhost for dev)
-ALLOWED_HOSTS = [
-    "localhost",
-    "127.0.0.1",
-    "web-production-21f70.up.railway.app"
-]
+ALLOWED_HOSTS = config('ALLOWED_HOSTS', default='').split(',')
 
 # ✅ CSRF trusted origins (must match Railway domain)
-CSRF_TRUSTED_ORIGINS = [
-    "https://web-production-21f70.up.railway.app"
-]
+CSRF_TRUSTED_ORIGINS = config('CSRF_TRUSTED_ORIGINS', default='').split(',')
 
 INSTALLED_APPS = [
     'django.contrib.admin',
@@ -72,9 +66,7 @@ WSGI_APPLICATION = 'habittracker.wsgi.application'
 
 # ✅ Supabase Postgres database (persistent)
 DATABASES = {
-    'default': dj_database_url.config(
-        default=os.environ.get('DATABASE_URL')
-    )
+    'default': dj_database_url.parse(config('DATABASE_URL'))
 }
 
 AUTH_PASSWORD_VALIDATORS = [
