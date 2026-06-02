@@ -13,10 +13,10 @@ SECRET_KEY = config(
 # ✅ Debug mode off in production
 DEBUG = config('DEBUG', default=False, cast=bool)
 
-# ✅ Hosts allowed (Railway domain + localhost for dev)
+# ✅ Hosts allowed (Render domain + localhost for dev)
 ALLOWED_HOSTS = config('ALLOWED_HOSTS', default='').split(',')
 
-# ✅ CSRF trusted origins (must match Railway domain)
+# ✅ CSRF trusted origins
 CSRF_TRUSTED_ORIGINS = config('CSRF_TRUSTED_ORIGINS', default='').split(',')
 
 INSTALLED_APPS = [
@@ -63,7 +63,7 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'habittracker.wsgi.application'
 
-# ✅ SQLite database (simple, no external DB needed)
+# ✅ SQLite database (simple, no external DB needed for dev)
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
@@ -104,8 +104,9 @@ DEFAULT_FROM_EMAIL = config('DEFAULT_FROM_EMAIL', default='noreply@habittracker.
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-# ✅ Security settings for production
+# ✅ Security settings
 if not DEBUG:
+    # Production (Render)
     SECURE_SSL_REDIRECT = True
     SESSION_COOKIE_SECURE = True
     CSRF_COOKIE_SECURE = True
@@ -115,3 +116,8 @@ if not DEBUG:
     SECURE_HSTS_SECONDS = 31536000
     SECURE_HSTS_INCLUDE_SUBDOMAINS = True
     SECURE_HSTS_PRELOAD = True
+else:
+    # Local development overrides
+    SECURE_SSL_REDIRECT = False
+    SESSION_COOKIE_SECURE = False
+    CSRF_COOKIE_SECURE = False
